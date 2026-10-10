@@ -13,6 +13,7 @@ module Wrench.Machine.Word (
     mulExt,
     u5,
     u20,
+    i8,
     i12,
     i13,
     i21,
@@ -83,6 +84,11 @@ u5 errMsgF x
 u20 :: (IsWord w) => (Text -> Text) -> w -> Either Text w
 u20 errMsgF x
     | 0 <= x && x <= 1048575 = Right x
+    | otherwise = Left $ errMsgF $ show x
+
+i8 :: (IsWord w) => (Text -> Text) -> w -> Either Text w
+i8 errMsgF x
+    | -128 <= x && x <= 127 = Right x
     | otherwise = Left $ errMsgF $ show x
 
 i12 :: (IsWord w) => (Text -> Text) -> w -> Either Text w

@@ -23,7 +23,39 @@ Comments in Acc32 assembly code are denoted by the `;` character.
 
 ## Instructions
 
-Instruction size: 1 byte for opcode, 4 bytes for absolute operand, 2 bytes for relative operand. Control flow, Load/Store Immediate/Indirect/Addr use absolute address, other -- relative.
+Instruction layouts (opcode byte first, `/signed` marks a sign-extended field --
+note these describe the logical field layout, not literal bit-packing: nothing
+here is actually assembled with `shiftL`/`.&.` the way e.g. Wasm32's control
+records are):
+
+- No operand -- 1 byte: `<<Opcode:8>>`
+  (`load_acc`, `not`, `clv`, `clc`, `halt`)
+- `load`/`store` -- 2 bytes, offset relative to `pc`: `<<Opcode:8, Offset:8/signed>>`
+- Arithmetic/bitwise -- 3 bytes, truncated absolute address: `<<Opcode:8, Address:16/signed>>`
+  (`add`, `sub`, `mul`, `div`, `rem`, `shiftl`, `shiftr`, `and`, `or`, `xor`)
+- Control flow, `load_imm`/`load_addr`/`store_addr`/`store_ind` -- 5 bytes, full absolute address: `<<Opcode:8, Address:32/signed>>`
+
+### Operand Fields
+
+An operand has to fit the instruction that carries it, and the two relative instructions carry the
+narrowest field in the ISA:
+
+| Operand                                                                           | Width         | Accepted values  | Out of range       |
+| --------------------------------------------------------------------------------- | ------------- | ---------------- | ------------------ |
+| `load`, `store` offset, counted from the instruction                              | 8-bit signed  | `-128..127`      | translation error  |
+| `add`, `sub`, `mul`, `div`, `rem`, `shiftl`, `shiftr`, `and`, `or`, `xor` address | 16-bit signed | `-32768..32767`  | silently truncated |
+| `load_imm`, `load_addr`, `store_addr`, `store_ind` and control-flow address       | full word     | any machine word | --                 |
+
+`load`/`store` reach ±127 bytes from the instruction itself, so what is rejected is the *distance*,
+not the number written in the source. A target out of reach has no encoding, so it is a translation
+error that points at the operand and names the mnemonic, the field and its range:
+
+```text
+error (acc32): program.s:3:10: load: relative offset 200 is not in -128..127
+```
+
+Move the data nearer the code, or switch that access to the absolute `load_addr`/`store_addr`, which
+carry a full word and are unaffected. `example/acc32/hello.s` mixes both.
 
 ### Data Movement Instructions
 

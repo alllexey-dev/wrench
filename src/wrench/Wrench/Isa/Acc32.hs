@@ -93,10 +93,10 @@ instance (IsWord w) => MnemonicParser (Acc32Isa w (Ref w)) where
             [ LoadImm <$> cmdMnemonic1 "load_imm" reference
             , LoadAddr <$> cmdMnemonic1 "load_addr" reference
             , cmdMnemonic0 "load_acc" >> return LoadAcc
-            , Load <$> cmdMnemonic1 "load" reference16
+            , Load <$> cmdMnemonic1 "load" reference
             , StoreAddr <$> cmdMnemonic1 "store_addr" reference
             , StoreInd <$> cmdMnemonic1 "store_ind" reference
-            , Store <$> cmdMnemonic1 "store" reference16
+            , Store <$> cmdMnemonic1 "store" reference
             , Add <$> cmdMnemonic1 "add" reference16
             , Sub <$> cmdMnemonic1 "sub" reference16
             , Mul <$> cmdMnemonic1 "mul" reference16
@@ -144,13 +144,14 @@ cmdMnemonic1 mnemonic refParser = try $ do
 instance (IsWord w) => DerefMnemonic (Acc32Isa w) w where
     derefMnemonic f offset i =
         let relF = fmap (\x -> x - offset) . f
+            offsetErr m x = m <> ": relative offset " <> x <> " is not in -128..127"
          in case i of
                 LoadImm l -> LoadImm (deref' f l)
                 LoadAddr l -> LoadAddr (deref' f l)
-                Load l -> Load (deref' relF l)
+                Load l -> Load (resolveRef (i8 (offsetErr "load")) relF l)
                 LoadAcc -> LoadAcc
                 StoreAddr l -> StoreAddr (deref' f l)
-                Store l -> Store (deref' relF l)
+                Store l -> Store (resolveRef (i8 (offsetErr "store")) relF l)
                 StoreInd l -> StoreInd (deref' f l)
                 Add l -> Add (deref' f l)
                 Sub l -> Sub (deref' f l)
@@ -181,6 +182,8 @@ instance ByteSize (Acc32Isa w l) where
     byteSize LoadImm{} = 5
     byteSize LoadAddr{} = 5
     byteSize LoadAcc{} = 1
+    byteSize Load{} = 2
+    byteSize Store{} = 2
     byteSize StoreAddr{} = 5
     byteSize StoreInd{} = 5
     byteSize Beqz{} = 5
