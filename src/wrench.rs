@@ -28,6 +28,8 @@ pub struct Options {
     pub input: String,
     pub verbose: bool,
     pub max_state_log_limit: usize,
+    /// Stop after translation: no simulation, empty trace.
+    pub only_translation: bool,
 }
 
 impl Default for Options {
@@ -36,6 +38,7 @@ impl Default for Options {
             input: String::new(),
             verbose: false,
             max_state_log_limit: 10000,
+            only_translation: false,
         }
     }
 }
@@ -69,6 +72,16 @@ pub fn wrench<A: Arch>(opts: &Options, conf: &Config, src: &str) -> Result<Wrenc
     let (warnings, reports) = compile_reports::<A::State>(&check_env, conf.reports.as_deref().unwrap_or(&[]))?;
     let tr = translate::<A>(conf.memory_size, &fill, &opts.input, src)?;
     let pc = *tr.labels.get("_start").ok_or("_start label should be defined.")?;
+    if opts.only_translation {
+        return Ok(WrenchResult {
+            trace: String::new(),
+            warnings,
+            success: true,
+            dump: tr.dump.cells(),
+            labels: tr.labels,
+            memory_size: conf.memory_size,
+        });
+    }
 
     let mut streams = BTreeMap::new();
     for (&addr, inputs) in &io {

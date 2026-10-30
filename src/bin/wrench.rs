@@ -97,6 +97,7 @@ fn main() -> ExitCode {
         input: cli.input.clone(),
         verbose: cli.verbose,
         max_state_log_limit: cli.state_log_limit,
+        only_translation: cli.only_translation,
     };
     let width = hex_addr_width(conf.memory_size);
     let show_addr = |a: i64| match cli.dump_addr_format {
