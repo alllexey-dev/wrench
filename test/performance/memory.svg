@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="342" viewBox="0 0 760 342" role="img" aria-label="Peak memory on heavy workloads (lower is better)">
+
+<style>
+  svg { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; font-variant-numeric: tabular-nums; }
+  .surface { fill: #fcfcfb; }
+  .ink { fill: #0b0b0b; }
+  .ink2 { fill: #52514e; }
+  .muted { fill: #898781; }
+  .grid { stroke: #e1e0d9; }
+  .axis { stroke: #c3c2b7; }
+  .ref { stroke: #52514e; }
+  .hs { fill: #2a78d6; }
+  .rs { fill: #eb6834; }
+  @media (prefers-color-scheme: dark) {
+    .surface { fill: #1a1a19; }
+    .ink { fill: #f0efec; }
+    .ink2 { fill: #c3c2b7; }
+    .grid { stroke: #2c2c2a; }
+    .axis { stroke: #383835; }
+    .ref { stroke: #c3c2b7; }
+    .hs { fill: #3987e5; }
+    .rs { fill: #d95926; }
+  }
+</style>
+
+<rect class="surface" width="760" height="342" rx="8"/>
+<text class="ink" x="16" y="26" font-size="15" font-weight="600">Peak memory on heavy workloads (lower is better)</text>
+<rect class="hs" x="220" y="36" width="10" height="10" rx="2"/>
+<text class="ink2" x="235" y="45" font-size="12">Haskell</text>
+<rect class="rs" x="299" y="36" width="10" height="10" rx="2"/>
+<text class="ink2" x="314" y="45" font-size="12">Rust</text>
+<line class="grid" x1="220.0" y1="52" x2="220.0" y2="308" stroke-width="1"/>
+<text class="muted" x="220.0" y="324" font-size="11" text-anchor="middle">0</text>
+<line class="grid" x1="339.0" y1="52" x2="339.0" y2="308" stroke-width="1"/>
+<text class="muted" x="339.0" y="324" font-size="11" text-anchor="middle">20</text>
+<line class="grid" x1="458.0" y1="52" x2="458.0" y2="308" stroke-width="1"/>
+<text class="muted" x="458.0" y="324" font-size="11" text-anchor="middle">40</text>
+<line class="grid" x1="577.0" y1="52" x2="577.0" y2="308" stroke-width="1"/>
+<text class="muted" x="577.0" y="324" font-size="11" text-anchor="middle">60</text>
+<line class="grid" x1="696.0" y1="52" x2="696.0" y2="308" stroke-width="1"/>
+<text class="muted" x="696.0" y="324" font-size="11" text-anchor="middle">80</text>
+<text class="muted" x="696" y="338" font-size="11" text-anchor="end">MB, max RSS</text>
+<text class="ink" x="210" y="73.0" font-size="12" text-anchor="end">f32a is_prime(2147483647)</text>
+<path class="hs" d="M220,56 H567.4683593750001 A4,4 0 0 1 571.4683593750001,60 V64 A4,4 0 0 1 567.4683593750001,68 H220 Z"><title>f32a is_prime(2147483647), Haskell: 59 MB, max RSS</title></path>
+<text class="ink2" x="577.4683593750001" y="66" font-size="11">59</text>
+<path class="rs" d="M220,70 H379.7876953125 A4,4 0 0 1 383.7876953125,74 V78 A4,4 0 0 1 379.7876953125,82 H220 Z"><title>f32a is_prime(2147483647), Rust: 28 MB, max RSS</title></path>
+<text class="ink2" x="389.7876953125" y="80" font-size="11">28</text>
+<text class="ink" x="210" y="115.0" font-size="12" text-anchor="end">risc-iv-32 fib_rec</text>
+<path class="hs" d="M220,98 H621.3205078125 A4,4 0 0 1 625.3205078125,102 V106 A4,4 0 0 1 621.3205078125,110 H220 Z"><title>risc-iv-32 fib_rec, Haskell: 68 MB, max RSS</title></path>
+<text class="ink2" x="631.3205078125" y="108" font-size="11">68</text>
+<path class="rs" d="M220,112 H429.8048828125 A4,4 0 0 1 433.8048828125,116 V120 A4,4 0 0 1 429.8048828125,124 H220 Z"><title>risc-iv-32 fib_rec, Rust: 36 MB, max RSS</title></path>
+<text class="ink2" x="439.8048828125" y="122" font-size="11">36</text>
+<text class="ink" x="210" y="157.0" font-size="12" text-anchor="end">risc-iv-32 primes</text>
+<path class="hs" d="M220,140 H544.7607421875 A4,4 0 0 1 548.7607421875,144 V148 A4,4 0 0 1 544.7607421875,152 H220 Z"><title>risc-iv-32 primes, Haskell: 55 MB, max RSS</title></path>
+<text class="ink2" x="554.7607421875" y="150" font-size="11">55</text>
+<path class="rs" d="M220,154 H387.4111328125 A4,4 0 0 1 391.4111328125,158 V162 A4,4 0 0 1 387.4111328125,166 H220 Z"><title>risc-iv-32 primes, Rust: 29 MB, max RSS</title></path>
+<text class="ink2" x="397.4111328125" y="164" font-size="11">29</text>
+<text class="ink" x="210" y="199.0" font-size="12" text-anchor="end">risc-iv-32 bubble_sort</text>
+<path class="hs" d="M220,182 H611.2333984375 A4,4 0 0 1 615.2333984375,186 V190 A4,4 0 0 1 611.2333984375,194 H220 Z"><title>risc-iv-32 bubble_sort, Haskell: 66 MB, max RSS</title></path>
+<text class="ink2" x="621.2333984375" y="192" font-size="11">66</text>
+<path class="rs" d="M220,196 H439.6595703125 A4,4 0 0 1 443.6595703125,200 V204 A4,4 0 0 1 439.6595703125,208 H220 Z"><title>risc-iv-32 bubble_sort, Rust: 38 MB, max RSS</title></path>
+<text class="ink2" x="449.6595703125" y="206" font-size="11">38</text>
+<text class="ink" x="210" y="241.0" font-size="12" text-anchor="end">risc-iv-32 collatz</text>
+<path class="hs" d="M220,224 H544.2261718750001 A4,4 0 0 1 548.2261718750001,228 V232 A4,4 0 0 1 544.2261718750001,236 H220 Z"><title>risc-iv-32 collatz, Haskell: 55 MB, max RSS</title></path>
+<text class="ink2" x="554.2261718750001" y="234" font-size="11">55</text>
+<path class="rs" d="M220,238 H384.76152343750005 A4,4 0 0 1 388.76152343750005,242 V246 A4,4 0 0 1 384.76152343750005,250 H220 Z"><title>risc-iv-32 collatz, Rust: 28 MB, max RSS</title></path>
+<text class="ink2" x="394.76152343750005" y="248" font-size="11">28</text>
+<text class="ink" x="210" y="283.0" font-size="12" text-anchor="end">risc-iv-32 huge-report</text>
+<path class="hs" d="M220,266 H520.4029296875001 A4,4 0 0 1 524.4029296875001,270 V274 A4,4 0 0 1 520.4029296875001,278 H220 Z"><title>risc-iv-32 huge-report, Haskell: 51 MB, max RSS</title></path>
+<text class="ink2" x="530.4029296875001" y="276" font-size="11">51</text>
+<path class="rs" d="M220,280 H370.2583984375 A4,4 0 0 1 374.2583984375,284 V288 A4,4 0 0 1 370.2583984375,292 H220 Z"><title>risc-iv-32 huge-report, Rust: 26 MB, max RSS</title></path>
+<text class="ink2" x="380.2583984375" y="290" font-size="11">26</text>
+<line class="axis" x1="220" y1="52" x2="220" y2="308" stroke-width="1"/>
+</svg>

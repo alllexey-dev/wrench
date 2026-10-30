@@ -1,0 +1,543 @@
+{
+  "host": {
+    "cpu": "AMD Ryzen 5 5500GT with Radeon Graphics",
+    "cpus": 12,
+    "os": "Linux-7.2.11-arch1-1-x86_64-with-glibc2.44"
+  },
+  "haskell_version": "0.0.6.2",
+  "rust_version": "wrench 0.6.2",
+  "rss_floor_mb": 15.2578125,
+  "groups": [
+    {
+      "title": "Simulation, heavy compute",
+      "runs": 5,
+      "cases": [
+        {
+          "name": "f32a is_prime(2147483647)",
+          "haskell_ms": 14022.5084029953,
+          "rust_ms": 2747.1572820213623,
+          "haskell_rss_mb": 59.0703125,
+          "rust_rss_mb": 27.52734375,
+          "haskell_exit": [
+            0
+          ],
+          "rust_exit": [
+            0
+          ]
+        },
+        {
+          "name": "risc-iv-32 fib_rec",
+          "haskell_ms": 20680.32751098508,
+          "rust_ms": 5594.700945017394,
+          "haskell_rss_mb": 68.12109375,
+          "rust_rss_mb": 35.93359375,
+          "haskell_exit": [
+            0
+          ],
+          "rust_exit": [
+            0
+          ]
+        },
+        {
+          "name": "risc-iv-32 primes",
+          "haskell_ms": 11761.309307999909,
+          "rust_ms": 3327.380263013765,
+          "haskell_rss_mb": 55.25390625,
+          "rust_rss_mb": 28.80859375,
+          "haskell_exit": [
+            0
+          ],
+          "rust_exit": [
+            0
+          ]
+        },
+        {
+          "name": "risc-iv-32 bubble_sort",
+          "haskell_ms": 19149.81092402013,
+          "rust_ms": 6205.103147018235,
+          "haskell_rss_mb": 66.42578125,
+          "rust_rss_mb": 37.58984375,
+          "haskell_exit": [
+            0
+          ],
+          "rust_exit": [
+            0
+          ]
+        },
+        {
+          "name": "risc-iv-32 collatz",
+          "haskell_ms": 11530.581679020543,
+          "rust_ms": 3166.206597990822,
+          "haskell_rss_mb": 55.1640625,
+          "rust_rss_mb": 28.36328125,
+          "haskell_exit": [
+            0
+          ],
+          "rust_exit": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Simulation, heavy report (`slice: all`)",
+      "runs": 5,
+      "cases": [
+        {
+          "name": "risc-iv-32 huge-report",
+          "haskell_ms": 1071.6592129901983,
+          "rust_ms": 282.16434497153386,
+          "haskell_rss_mb": 51.16015625,
+          "rust_rss_mb": 25.92578125,
+          "haskell_exit": [
+            0
+          ],
+          "rust_exit": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Simulation, small examples (startup dominated)",
+      "runs": 30,
+      "cases": [
+        {
+          "name": "acc32/factorial-5",
+          "haskell_ms": 5.0841529737226665,
+          "rust_ms": 1.2292055180296302,
+          "haskell_rss_mb": 25.05859375,
+          "rust_rss_mb": 15.640625,
+          "haskell_exit": [
+            0
+          ],
+          "rust_exit": [
+            0
+          ]
+        },
+        {
+          "name": "acc32/get-put-char-87",
+          "haskell_ms": 5.294414528179914,
+          "rust_ms": 1.0242389980703592,
+          "haskell_rss_mb": 26.125,
+          "rust_rss_mb": 15.640625,
+          "haskell_exit": [
+            0
+          ],
+          "rust_exit": [
+            0
+          ]
+        },
+        {
+          "name": "acc32/get-put-char-ABCD",
+          "haskell_ms": 5.3924800013192,
+          "rust_ms": 1.0218344978056848,
+          "haskell_rss_mb": 26.11328125,
+          "rust_rss_mb": 15.640625,
+          "haskell_exit": [
+            0
+          ],
+          "rust_exit": [
+            0
+          ]
+        },
+        {
+          "name": "acc32/hello",
+          "haskell_ms": 7.707349490374327,
+          "rust_ms": 1.434322475688532,
+          "haskell_rss_mb": 27.3828125,
+          "rust_rss_mb": 15.640625,
+          "haskell_exit": [
+            0
+          ],
+          "rust_exit": [
+            0
+          ]
+        },
+        {
+          "name": "acc32/not-true",
+          "haskell_ms": 6.929747003596276,
+          "rust_ms": 1.0774285183288157,
+          "haskell_rss_mb": 27.3359375,
+          "rust_rss_mb": 15.640625,
+          "haskell_exit": [
+            0
+          ],
+          "rust_exit": [
+            0
+          ]
+        },
+        {
+          "name": "f32a/factorial",
+          "haskell_ms": 8.279354515252635,
+          "rust_ms": 2.2079280170146376,
+          "haskell_rss_mb": 27.3046875,
+          "rust_rss_mb": 15.640625,
+          "haskell_exit": [
+            0
+          ],
+          "rust_exit": [
+            0
+          ]
+        },
+        {
+          "name": "f32a/hello",
+          "haskell_ms": 7.3798265075311065,
+          "rust_ms": 1.3812975375913084,
+          "haskell_rss_mb": 27.5,
+          "rust_rss_mb": 15.640625,
+          "haskell_exit": [
+            0
+          ],
+          "rust_exit": [
+            0
+          ]
+        },
+        {
+          "name": "f32a/not-true",
+          "haskell_ms": 6.626864516874775,
+          "rust_ms": 1.06338199111633,
+          "haskell_rss_mb": 27.49609375,
+          "rust_rss_mb": 15.640625,
+          "haskell_exit": [
+            0
+          ],
+          "rust_exit": [
+            0
+          ]
+        },
+        {
+          "name": "m68k/factorial-5",
+          "haskell_ms": 4.851884004892781,
+          "rust_ms": 1.116978528443724,
+          "haskell_rss_mb": 24.6640625,
+          "rust_rss_mb": 15.640625,
+          "haskell_exit": [
+            0
+          ],
+          "rust_exit": [
+            0
+          ]
+        },
+        {
+          "name": "m68k/factorial-recursive-2",
+          "haskell_ms": 4.744380974443629,
+          "rust_ms": 1.0929135023616254,
+          "haskell_rss_mb": 24.70703125,
+          "rust_rss_mb": 15.640625,
+          "haskell_exit": [
+            0
+          ],
+          "rust_exit": [
+            0
+          ]
+        },
+        {
+          "name": "m68k/factorial-recursive",
+          "haskell_ms": 4.842191032366827,
+          "rust_ms": 1.111488469177857,
+          "haskell_rss_mb": 24.70703125,
+          "rust_rss_mb": 15.640625,
+          "haskell_exit": [
+            0
+          ],
+          "rust_exit": [
+            0
+          ]
+        },
+        {
+          "name": "m68k/get-put-char-87",
+          "haskell_ms": 6.802836986025795,
+          "rust_ms": 1.5180804766714573,
+          "haskell_rss_mb": 27.35546875,
+          "rust_rss_mb": 15.640625,
+          "haskell_exit": [
+            0
+          ],
+          "rust_exit": [
+            0
+          ]
+        },
+        {
+          "name": "m68k/hello-byte",
+          "haskell_ms": 7.065763464197516,
+          "rust_ms": 1.5043044986668974,
+          "haskell_rss_mb": 27.44140625,
+          "rust_rss_mb": 15.765625,
+          "haskell_exit": [
+            0
+          ],
+          "rust_exit": [
+            0
+          ]
+        },
+        {
+          "name": "m68k/hello",
+          "haskell_ms": 6.986083026276901,
+          "rust_ms": 1.491575501859188,
+          "haskell_rss_mb": 27.46484375,
+          "rust_rss_mb": 15.765625,
+          "haskell_exit": [
+            0
+          ],
+          "rust_exit": [
+            0
+          ]
+        },
+        {
+          "name": "m68k/not-true",
+          "haskell_ms": 6.8128209677524865,
+          "rust_ms": 1.3525685062631965,
+          "haskell_rss_mb": 27.328125,
+          "rust_rss_mb": 15.765625,
+          "haskell_exit": [
+            0
+          ],
+          "rust_exit": [
+            0
+          ]
+        },
+        {
+          "name": "risc-iv-32/factorial-5",
+          "haskell_ms": 4.952213465003297,
+          "rust_ms": 1.3435109867714345,
+          "haskell_rss_mb": 25.109375,
+          "rust_rss_mb": 15.765625,
+          "haskell_exit": [
+            0
+          ],
+          "rust_exit": [
+            0
+          ]
+        },
+        {
+          "name": "risc-iv-32/get-put-char-87",
+          "haskell_ms": 6.609036499867216,
+          "rust_ms": 1.4714629796799272,
+          "haskell_rss_mb": 27.62109375,
+          "rust_rss_mb": 15.765625,
+          "haskell_exit": [
+            0
+          ],
+          "rust_exit": [
+            0
+          ]
+        },
+        {
+          "name": "risc-iv-32/get-put-char-ABCD",
+          "haskell_ms": 7.095494482200593,
+          "rust_ms": 1.4087944873608649,
+          "haskell_rss_mb": 27.3359375,
+          "rust_rss_mb": 15.765625,
+          "haskell_exit": [
+            0
+          ],
+          "rust_exit": [
+            0
+          ]
+        },
+        {
+          "name": "risc-iv-32/hello",
+          "haskell_ms": 6.788334489101544,
+          "rust_ms": 1.5005530149210244,
+          "haskell_rss_mb": 27.61328125,
+          "rust_rss_mb": 15.765625,
+          "haskell_exit": [
+            0
+          ],
+          "rust_exit": [
+            0
+          ]
+        },
+        {
+          "name": "risc-iv-32/not-true",
+          "haskell_ms": 6.698405457427725,
+          "rust_ms": 1.442632987163961,
+          "haskell_rss_mb": 27.2734375,
+          "rust_rss_mb": 15.765625,
+          "haskell_exit": [
+            0
+          ],
+          "rust_exit": [
+            0
+          ]
+        },
+        {
+          "name": "risc-iv-32/random-memory-init",
+          "haskell_ms": 3.969382494688034,
+          "rust_ms": 0.986817991361022,
+          "haskell_rss_mb": 23.5703125,
+          "rust_rss_mb": 15.765625,
+          "haskell_exit": [
+            0
+          ],
+          "rust_exit": [
+            0
+          ]
+        },
+        {
+          "name": "vliw-iv/factorial-5",
+          "haskell_ms": 6.75519197829999,
+          "rust_ms": 1.8957089923787862,
+          "haskell_rss_mb": 27.19921875,
+          "rust_rss_mb": 15.765625,
+          "haskell_exit": [
+            0
+          ],
+          "rust_exit": [
+            0
+          ]
+        },
+        {
+          "name": "vliw-iv/hello",
+          "haskell_ms": 7.025958533631638,
+          "rust_ms": 1.6062275099102408,
+          "haskell_rss_mb": 27.37890625,
+          "rust_rss_mb": 15.765625,
+          "haskell_exit": [
+            0
+          ],
+          "rust_exit": [
+            0
+          ]
+        },
+        {
+          "name": "vliw-iv/test-parallel",
+          "haskell_ms": 7.186932518379763,
+          "rust_ms": 1.5378179959952831,
+          "haskell_rss_mb": 27.32421875,
+          "rust_rss_mb": 15.765625,
+          "haskell_exit": [
+            0
+          ],
+          "rust_exit": [
+            0
+          ]
+        },
+        {
+          "name": "wasm32/factorial-5",
+          "haskell_ms": 5.666942975949496,
+          "rust_ms": 1.5211814898066223,
+          "haskell_rss_mb": 25.73046875,
+          "rust_rss_mb": 15.765625,
+          "haskell_exit": [
+            0
+          ],
+          "rust_exit": [
+            0
+          ]
+        },
+        {
+          "name": "wasm32/factorial-recursive-5",
+          "haskell_ms": 5.659001966705546,
+          "rust_ms": 1.506569009507075,
+          "haskell_rss_mb": 25.83984375,
+          "rust_rss_mb": 15.765625,
+          "haskell_exit": [
+            0
+          ],
+          "rust_exit": [
+            0
+          ]
+        },
+        {
+          "name": "wasm32/frames",
+          "haskell_ms": 4.657101031625643,
+          "rust_ms": 1.26315449597314,
+          "haskell_rss_mb": 24.42578125,
+          "rust_rss_mb": 15.765625,
+          "haskell_exit": [
+            0
+          ],
+          "rust_exit": [
+            0
+          ]
+        },
+        {
+          "name": "wasm32/get-put-char-87",
+          "haskell_ms": 5.580123484833166,
+          "rust_ms": 1.131891505792737,
+          "haskell_rss_mb": 26.4375,
+          "rust_rss_mb": 15.765625,
+          "haskell_exit": [
+            0
+          ],
+          "rust_exit": [
+            0
+          ]
+        },
+        {
+          "name": "wasm32/get-put-char-ABCD",
+          "haskell_ms": 6.811342987930402,
+          "rust_ms": 1.1174494866281748,
+          "haskell_rss_mb": 27.43359375,
+          "rust_rss_mb": 15.765625,
+          "haskell_exit": [
+            0
+          ],
+          "rust_exit": [
+            0
+          ]
+        },
+        {
+          "name": "wasm32/hello",
+          "haskell_ms": 7.562630984466523,
+          "rust_ms": 1.9929970148950815,
+          "haskell_rss_mb": 27.109375,
+          "rust_rss_mb": 15.765625,
+          "haskell_exit": [
+            0
+          ],
+          "rust_exit": [
+            0
+          ]
+        },
+        {
+          "name": "wasm32/not-true",
+          "haskell_ms": 6.53584799147211,
+          "rust_ms": 1.1491385230328888,
+          "haskell_rss_mb": 27.3671875,
+          "rust_rss_mb": 15.765625,
+          "haskell_exit": [
+            0
+          ],
+          "rust_exit": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Translation only (`-S`)",
+      "runs": 30,
+      "cases": [
+        {
+          "name": "f32a is_prime",
+          "haskell_ms": 9.094137494685128,
+          "rust_ms": 1.7451340099796653,
+          "haskell_rss_mb": 28.375,
+          "rust_rss_mb": 15.765625,
+          "haskell_exit": [
+            0
+          ],
+          "rust_exit": [
+            0
+          ]
+        },
+        {
+          "name": "risc-iv-32 bubble_sort",
+          "haskell_ms": 12.431727518560365,
+          "rust_ms": 3.041281015612185,
+          "haskell_rss_mb": 31.5546875,
+          "rust_rss_mb": 15.765625,
+          "haskell_exit": [
+            0
+          ],
+          "rust_exit": [
+            0
+          ]
+        }
+      ]
+    }
+  ]
+}
