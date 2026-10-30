@@ -27,14 +27,14 @@ ggg:
   +/  next ggg  ;
 
 hhh:
-  drop 0  ;
+  drop lit 0 ;
 kkk:
-  drop 1  ;
+  drop lit 1 ;
 
 lll:
   if hhh  kkk  ;
 
 mmm:
-  drop -1  ;
+  drop lit -1 ;
 ooo:
   halt
