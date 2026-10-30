@@ -17,10 +17,10 @@ blazingly fast and it's cleaner than cash.
 I came to the project, the code was a mess,
 pointers everywhere, memory in distress,
 I said "step aside, I know what we must,"
-and I deleted it all and rewrote it in Rust. (hyperbole)
+and I deleted it all and rewrote it in Rust.
 
 Cargo build, I'm sipping my tea,
-compiler takes longer than my degree, (hyperbole)
+compiler takes longer than my degree,
 but when it compiles, man, it works like a dream,
 no garbage collector, I'm running it clean.
 
@@ -31,7 +31,7 @@ no null, no leaks, no segfault, no crash,
 blazingly fast and it's cleaner than cash.
 
 [Verse 2]
-But then came the borrow checker, cold as ice, (tonal shift)
+But then came the borrow checker, cold as ice,
 said "you borrowed it twice, that's not very nice,"
 I added a lifetime, it said "that's wrong,"
 I added another, it's been three days long.
@@ -42,10 +42,10 @@ I begged it, I cried, I screamed "let me through!"
 it said "error[E0502]," what did I do?
 
 [Outro]
-Only after three days did it compile for me, (inversion)
-the app does nothing, but it's memory-safe, see? (irony)
+Only after three days did it compile for me,
+the app does nothing, but it's memory-safe, see?
 They asked me "was it worth it, the pain and the dust?"
-I said "nah, but next time... I'll rewrite it in Rust." (circular structure)
+I said "nah, but next time... I'll rewrite it in Rust."
 ```
 
 Wrench is a teaching platform for computer architecture: one assembler/simulator toolchain shared across many deliberately different CPU paradigms, plus a formatter and a grading service for running real coursework. Every architecture uses the same assembly conventions, YAML-driven configuration, and report/assertion language, so a single lab exercise can be solved once and compared instruction-for-instruction across an accumulator machine, a stack machine, a load-store RISC, a register-memory CISC, a VLIW design, etc.
