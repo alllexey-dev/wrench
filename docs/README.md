@@ -167,7 +167,7 @@ For ISA-specific details (instructions, registers, etc.), refer to the respectiv
 - [VLIW-IV](./vliw-iv.md) - RISC-V-inspired VLIW 32-bit architecture
 - [Wasm32](./wasm32.md) - WebAssembly-inspired stack-based architecture
 
-If you can't find certain details in the documentation, the [source code](/src/wrench/Wrench/Isa) contains the most up-to-date information.
+If you can't find certain details in the documentation, the [source code](/src/isa) contains the most up-to-date information.
 
 ### Setting Section Addresses
 

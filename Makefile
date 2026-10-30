@@ -1,25 +1,24 @@
 .PHONY: build build-dist build-examples build-fmt \
-        test test-hs test-examples test-server test-accept test-perf test-perf-profile \
-        format format-hs format-asm format-py format-md format-html format-yaml \
-        format-check format-check-hs format-check-asm format-check-py format-check-html format-check-md \
-        lint lint-hs lint-py lint-html typecheck-py \
-        lint-fix lint-fix-hs lint-fix-py \
-        generate generate-variants generate-stack-deps \
+        test test-rs test-examples test-server test-accept test-perf \
+        format format-rs format-asm format-py format-md format-html format-yaml \
+        format-check format-check-rs format-check-asm format-check-py format-check-html format-check-md \
+        lint lint-rs lint-py lint-html typecheck-py \
+        lint-fix lint-fix-rs lint-fix-py \
+        generate generate-variants \
         run-server \
-        docs-haddock \
-        docker-build docker-push-builder docker-push-edge \
+        docs-rustdoc \
+        docker-build docker-push-edge \
         fix clean
 
 COMMIT = $(shell git rev-parse --short HEAD)
-
-BUILDER_IMAGE_NAME = ryukzak/wrench-builder
 
 IMAGE_NAME = ryukzak/wrench
 
 EDGE_IMAGE = $(IMAGE_NAME):edge
 COMMIT_IMAGE = $(IMAGE_NAME):$(COMMIT)
 
-HS_SRC_DIR = .
+WRENCH = target/release/wrench
+WRENCH_FMT = target/release/wrench-fmt
 
 export VERSION_SUFFIX ?= DEV
 
@@ -28,106 +27,98 @@ all: format lint-fix test
 # Build
 
 build:
-	stack build --copy-bins
+	cargo build --release --workspace
 
 build-fmt:
-	stack build --copy-bins :wrench-fmt
+	cargo build --release --bin wrench-fmt
 
-build-examples:
-	python script/build_examples.py --fail-fast
+build-examples: build
+	python script/build_examples.py --wrench $(WRENCH) --fail-fast
 
 # Docs
 
-docs-haddock:
-	stack haddock --fast --no-haddock-deps --haddock-hyperlink-source wrench:lib
-	docs_dir=$$(stack path --dist-dir)/doc/html/wrench; \
-	find $$docs_dir -name '*.html' -exec sed -i.bak \
-	    -e 's#href="\.\./\([^/"]*\)/#href="https://hackage.haskell.org/package/\1/docs/#g' \
-	    {} +; \
-	find $$docs_dir -name '*.bak' -delete
+docs-rustdoc:
+	cargo doc --no-deps --workspace
 
 # Run
 
 run-server: build generate-variants
-	stack exec wrench-serv
+	WRENCH_EXEC=$(WRENCH) target/release/wrench-serv
 
 # Test
 
-test: test-hs test-examples test-server
+test: test-rs test-examples test-server
 
-test-hs:
-	stack build --fast --test --test-arguments "--rerun"
+test-rs:
+	cargo test --workspace
 
 test-examples: build
-	stack exec wrench -- --isa risc-iv-32 example/risc-iv-32/factorial.s    -c example/risc-iv-32/factorial-5.yaml
-	stack exec wrench -- --isa risc-iv-32 example/risc-iv-32/hello.s        -c example/risc-iv-32/hello.yaml
-	stack exec wrench -- --isa risc-iv-32 example/risc-iv-32/get-put-char.s -c example/risc-iv-32/get-put-char-87.yaml
-	stack exec wrench -- --isa risc-iv-32 example/risc-iv-32/get-put-char.s -c example/risc-iv-32/get-put-char-ABCD.yaml
-	stack exec wrench -- --isa risc-iv-32 example/risc-iv-32/not.s          -c example/risc-iv-32/not-true.yaml
-	stack exec wrench -- --isa risc-iv-32 example/risc-iv-32/huge-report.s  -c example/risc-iv-32/huge-report.yaml
-	stack exec wrench -- --isa risc-iv-32 example/risc-iv-32/random-memory-init.s -c example/risc-iv-32/random-memory-init.yaml
+	$(WRENCH) --isa risc-iv-32 example/risc-iv-32/factorial.s    -c example/risc-iv-32/factorial-5.yaml
+	$(WRENCH) --isa risc-iv-32 example/risc-iv-32/hello.s        -c example/risc-iv-32/hello.yaml
+	$(WRENCH) --isa risc-iv-32 example/risc-iv-32/get-put-char.s -c example/risc-iv-32/get-put-char-87.yaml
+	$(WRENCH) --isa risc-iv-32 example/risc-iv-32/get-put-char.s -c example/risc-iv-32/get-put-char-ABCD.yaml
+	$(WRENCH) --isa risc-iv-32 example/risc-iv-32/not.s          -c example/risc-iv-32/not-true.yaml
+	$(WRENCH) --isa risc-iv-32 example/risc-iv-32/huge-report.s  -c example/risc-iv-32/huge-report.yaml
+	$(WRENCH) --isa risc-iv-32 example/risc-iv-32/random-memory-init.s -c example/risc-iv-32/random-memory-init.yaml
 
-	stack exec wrench -- --isa f32a       example/f32a/not.s                -c example/f32a/not-true.yaml
-	stack exec wrench -- --isa f32a       example/f32a/hello.s              -c example/f32a/hello.yaml
-	# stack exec wrench -- --isa f32a       example/f32a/get-put-char.s       -c example/f32a/get-put-char-87.yaml
-	# stack exec wrench -- --isa f32a       example/f32a/get-put-char.s       -c example/f32a/get-put-char-ABCD.yaml
-	stack exec wrench -- --isa f32a       example/f32a/factorial.s          -c example/f32a/factorial.yaml
+	$(WRENCH) --isa f32a       example/f32a/not.s                -c example/f32a/not-true.yaml
+	$(WRENCH) --isa f32a       example/f32a/hello.s              -c example/f32a/hello.yaml
+	# $(WRENCH) --isa f32a       example/f32a/get-put-char.s       -c example/f32a/get-put-char-87.yaml
+	# $(WRENCH) --isa f32a       example/f32a/get-put-char.s       -c example/f32a/get-put-char-ABCD.yaml
+	$(WRENCH) --isa f32a       example/f32a/factorial.s          -c example/f32a/factorial.yaml
 
-	stack exec wrench -- --isa acc32      example/acc32/not.s               -c example/acc32/not-true.yaml
-	stack exec wrench -- --isa acc32      example/acc32/hello.s             -c example/acc32/hello.yaml
-	stack exec wrench -- --isa acc32      example/acc32/get-put-char.s      -c example/acc32/get-put-char-87.yaml
-	stack exec wrench -- --isa acc32      example/acc32/get-put-char.s      -c example/acc32/get-put-char-ABCD.yaml
-	stack exec wrench -- --isa acc32      example/acc32/factorial.s         -c example/acc32/factorial-5.yaml
+	$(WRENCH) --isa acc32      example/acc32/not.s               -c example/acc32/not-true.yaml
+	$(WRENCH) --isa acc32      example/acc32/hello.s             -c example/acc32/hello.yaml
+	$(WRENCH) --isa acc32      example/acc32/get-put-char.s      -c example/acc32/get-put-char-87.yaml
+	$(WRENCH) --isa acc32      example/acc32/get-put-char.s      -c example/acc32/get-put-char-ABCD.yaml
+	$(WRENCH) --isa acc32      example/acc32/factorial.s         -c example/acc32/factorial-5.yaml
 
-	stack exec wrench -- --isa m68k       example/m68k/not.s                -c example/m68k/not-true.yaml
-	stack exec wrench -- --isa m68k       example/m68k/get-put-char.s       -c example/m68k/get-put-char-87.yaml
-	stack exec wrench -- --isa m68k       example/m68k/hello.s              -c example/m68k/hello.yaml
-	stack exec wrench -- --isa m68k       example/m68k/hello-byte.s         -c example/m68k/hello-byte.yaml
-	stack exec wrench -- --isa m68k       example/m68k/factorial.s          -c example/m68k/factorial-5.yaml
-	stack exec wrench -- --isa m68k       example/m68k/factorial-recursive.s -c example/m68k/factorial-recursive.yaml
-	stack exec wrench -- --isa m68k       example/m68k/factorial-recursive-2.s -c example/m68k/factorial-recursive-2.yaml
+	$(WRENCH) --isa m68k       example/m68k/not.s                -c example/m68k/not-true.yaml
+	$(WRENCH) --isa m68k       example/m68k/get-put-char.s       -c example/m68k/get-put-char-87.yaml
+	$(WRENCH) --isa m68k       example/m68k/hello.s              -c example/m68k/hello.yaml
+	$(WRENCH) --isa m68k       example/m68k/hello-byte.s         -c example/m68k/hello-byte.yaml
+	$(WRENCH) --isa m68k       example/m68k/factorial.s          -c example/m68k/factorial-5.yaml
+	$(WRENCH) --isa m68k       example/m68k/factorial-recursive.s -c example/m68k/factorial-recursive.yaml
+	$(WRENCH) --isa m68k       example/m68k/factorial-recursive-2.s -c example/m68k/factorial-recursive-2.yaml
 
-	stack exec wrench -- --isa vliw-iv    example/vliw-iv/hello.s           -c example/vliw-iv/hello.yaml
-	stack exec wrench -- --isa vliw-iv    example/vliw-iv/factorial.s       -c example/vliw-iv/factorial-5.yaml
-	stack exec wrench -- --isa vliw-iv    example/vliw-iv/test-parallel.s   -c example/vliw-iv/test-parallel.yaml
+	$(WRENCH) --isa vliw-iv    example/vliw-iv/hello.s           -c example/vliw-iv/hello.yaml
+	$(WRENCH) --isa vliw-iv    example/vliw-iv/factorial.s       -c example/vliw-iv/factorial-5.yaml
+	$(WRENCH) --isa vliw-iv    example/vliw-iv/test-parallel.s   -c example/vliw-iv/test-parallel.yaml
 
-	stack exec wrench -- --isa wasm32     example/wasm32/hello.s            -c example/wasm32/hello.yaml
-	stack exec wrench -- --isa wasm32     example/wasm32/factorial.s        -c example/wasm32/factorial-5.yaml
-	stack exec wrench -- --isa wasm32     example/wasm32/factorial-recursive.s -c example/wasm32/factorial-recursive-5.yaml
-	stack exec wrench -- --isa wasm32     example/wasm32/get-put-char.s     -c example/wasm32/get-put-char-87.yaml
-	stack exec wrench -- --isa wasm32     example/wasm32/get-put-char.s     -c example/wasm32/get-put-char-ABCD.yaml
-	stack exec wrench -- --isa wasm32     example/wasm32/not.s              -c example/wasm32/not-true.yaml
-	stack exec wrench -- --isa wasm32     example/wasm32/frames.s           -c example/wasm32/frames.yaml
+	$(WRENCH) --isa wasm32     example/wasm32/hello.s            -c example/wasm32/hello.yaml
+	$(WRENCH) --isa wasm32     example/wasm32/factorial.s        -c example/wasm32/factorial-5.yaml
+	$(WRENCH) --isa wasm32     example/wasm32/factorial-recursive.s -c example/wasm32/factorial-recursive-5.yaml
+	$(WRENCH) --isa wasm32     example/wasm32/get-put-char.s     -c example/wasm32/get-put-char-87.yaml
+	$(WRENCH) --isa wasm32     example/wasm32/get-put-char.s     -c example/wasm32/get-put-char-ABCD.yaml
+	$(WRENCH) --isa wasm32     example/wasm32/not.s              -c example/wasm32/not-true.yaml
+	$(WRENCH) --isa wasm32     example/wasm32/frames.s           -c example/wasm32/frames.yaml
 
 test-server: build generate-variants
-	stack exec wrench-serv &
+	WRENCH_EXEC=$(WRENCH) target/release/wrench-serv &
 	hurl --retry 3 --no-output test/wrench-serv.hurl
 	pkill -f wrench-serv
 
 test-perf:
-	stack build --ghc-options -O2 :wrench
-	time stack exec wrench -- --isa f32a test/performance/program.s -c test/performance/conf.yaml
-
-test-perf-profile:
-	stack run --profile wrench -- +RTS -p -RTS --isa f32a test/performance/program.s -c test/performance/conf.yaml
+	cargo build --release --bin wrench
+	time $(WRENCH) --isa f32a test/performance/program.s -c test/performance/conf.yaml
 
 test-accept: generate-variants
-	stack test --fast --test --test-arguments="--accept --rerun"
+	WRENCH_ACCEPT=1 cargo test --workspace
 
 # Format – apply
 
-format: format-hs format-asm format-py format-md format-html format-yaml
+format: format-rs format-asm format-py format-md format-html format-yaml
 
-format-hs:
-	fourmolu -m inplace $(HS_SRC_DIR)
+format-rs:
+	cargo fmt --all
 
 format-asm: build-fmt
-	stack exec wrench-fmt -- --inplace --isa risc-iv-32 -v example/risc-iv-32/*.s test/golden/risc-iv-32/*.s
-	stack exec wrench-fmt -- --inplace --isa f32a       -v example/f32a/*.s       test/golden/f32a/*.s
-	stack exec wrench-fmt -- --inplace --isa acc32      -v example/acc32/*.s      test/golden/acc32/*.s
-	stack exec wrench-fmt -- --inplace --isa m68k       -v example/m68k/*.s       test/golden/m68k/*.s
-	stack exec wrench-fmt -- --inplace --isa vliw-iv    -v example/vliw-iv/*.s    test/golden/vliw-iv/*.s
-	stack exec wrench-fmt -- --inplace --isa wasm32     -v example/wasm32/*.s     test/golden/wasm32/*.s
+	$(WRENCH_FMT) --inplace --isa risc-iv-32 -v example/risc-iv-32/*.s test/golden/risc-iv-32/*.s
+	$(WRENCH_FMT) --inplace --isa f32a       -v example/f32a/*.s       test/golden/f32a/*.s
+	$(WRENCH_FMT) --inplace --isa acc32      -v example/acc32/*.s      test/golden/acc32/*.s
+	$(WRENCH_FMT) --inplace --isa m68k       -v example/m68k/*.s       test/golden/m68k/*.s
+	$(WRENCH_FMT) --inplace --isa vliw-iv    -v example/vliw-iv/*.s    test/golden/vliw-iv/*.s
+	$(WRENCH_FMT) --inplace --isa wasm32     -v example/wasm32/*.s     test/golden/wasm32/*.s
 
 format-py:
 	ruff format script
@@ -143,18 +134,18 @@ format-yaml:
 
 # Format – check
 
-format-check: format-check-hs format-check-asm format-check-py format-check-html format-check-md
+format-check: format-check-rs format-check-asm format-check-py format-check-html format-check-md
 
-format-check-hs:
-	fourmolu -m check $(HS_SRC_DIR)
+format-check-rs:
+	cargo fmt --all --check
 
 format-check-asm: build-fmt
-	stack exec wrench-fmt -- --check --isa risc-iv-32 -v example/risc-iv-32/*.s test/golden/risc-iv-32/*.s
-	stack exec wrench-fmt -- --check --isa f32a       -v example/f32a/*.s       test/golden/f32a/*.s
-	stack exec wrench-fmt -- --check --isa acc32      -v example/acc32/*.s      test/golden/acc32/*.s
-	stack exec wrench-fmt -- --check --isa m68k       -v example/m68k/*.s       test/golden/m68k/*.s
-	stack exec wrench-fmt -- --check --isa vliw-iv    -v example/vliw-iv/*.s    test/golden/vliw-iv/*.s
-	stack exec wrench-fmt -- --check --isa wasm32     -v example/wasm32/*.s     test/golden/wasm32/*.s
+	$(WRENCH_FMT) --check --isa risc-iv-32 -v example/risc-iv-32/*.s test/golden/risc-iv-32/*.s
+	$(WRENCH_FMT) --check --isa f32a       -v example/f32a/*.s       test/golden/f32a/*.s
+	$(WRENCH_FMT) --check --isa acc32      -v example/acc32/*.s      test/golden/acc32/*.s
+	$(WRENCH_FMT) --check --isa m68k       -v example/m68k/*.s       test/golden/m68k/*.s
+	$(WRENCH_FMT) --check --isa vliw-iv    -v example/vliw-iv/*.s    test/golden/vliw-iv/*.s
+	$(WRENCH_FMT) --check --isa wasm32     -v example/wasm32/*.s     test/golden/wasm32/*.s
 
 format-check-py:
 	ruff format --check script
@@ -167,10 +158,10 @@ format-check-md:
 
 # Lint – check
 
-lint: lint-hs lint-py lint-html typecheck-py
+lint: lint-rs lint-py lint-html typecheck-py
 
-lint-hs:
-	hlint $(HS_SRC_DIR)
+lint-rs:
+	cargo clippy --workspace --all-targets -- -D warnings
 
 lint-py:
 	ruff check script
@@ -183,33 +174,26 @@ lint-html:
 
 # Lint – fix
 
-lint-fix: lint-fix-hs lint-fix-py
+lint-fix: lint-fix-rs lint-fix-py
 
-lint-fix-hs:
-	fd -tf .hs | xargs -n 1 -P 8 hlint --refactor --refactor-options="--inplace"
+lint-fix-rs:
+	cargo clippy --workspace --all-targets --fix --allow-dirty
 
 lint-fix-py:
 	ruff check script --fix
 
 # Generate
 
-generate: generate-variants generate-stack-deps
+generate: generate-variants
 
 generate-variants:
 	mkdir -p variants
 	script/variants.py
 
-generate-stack-deps:
-	stack ls dependencies | grep -v wrench > .stack-deps.txt
-
 # Docker
 
 docker-build:
 	docker build --build-arg VERSION_SUFFIX=DEV -t $(IMAGE_NAME) .
-
-docker-push-builder: generate-stack-deps
-	docker buildx build --platform linux/amd64,linux/arm64 --push \
-		-t $(BUILDER_IMAGE_NAME) --target wrench-builder .
 
 docker-push-edge:
 	docker buildx build --build-arg VERSION_SUFFIX=EDGE --platform linux/amd64,linux/arm64 --push \
@@ -225,7 +209,7 @@ fix: lint-fix format generate test-accept test-examples test-server
 fix-variant: format-py lint-fix-py generate-variants
 
 clean:
-	stack clean
+	cargo clean
 	fd .result | xargs rm -v
 	rm -v -R -f test/golden/generated/*
 	rm -v -R -f variants/*

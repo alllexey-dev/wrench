@@ -5,15 +5,17 @@ on:
   push:
 
 jobs:
-  haskell-formatting:
+  rust-formatting:
     timeout-minutes: 5
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
 
-      - uses: haskell-actions/run-fourmolu@v13
+      - uses: dtolnay/rust-toolchain@stable
         with:
-          version: "0.20.1.0"
+          components: rustfmt
+
+      - run: make format-check-rs
 
   html-formatting:
     timeout-minutes: 5
@@ -46,32 +48,19 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - uses: actions/cache@v6
-        name: Cache ~/.stack
-        with:
-          path: ${{ '~/.stack' }}
-          key: wrench-job-${{ runner.os }}-${{ runner.arch }}-stack-${{ hashFiles('.stack-deps.txt') }}
+      - uses: dtolnay/rust-toolchain@stable
 
-      - name: Install haskell-stack
-        uses: haskell-actions/setup@v2
-        with:
-          enable-stack: true
-          stack-version: "latest"
-          stack-no-global: true
-          ghc-version: "9.10.3"
+      - uses: Swatinem/rust-cache@v2
 
       - uses: actions/setup-python@v7
         with:
           python-version: '3.14'
 
       - name: Test
-        run: make test-hs
+        run: make test-rs
 
       - name: Test examples
         run: make test-examples
-
-      - name: Build
-        run: make build
 
       - name: Build examples
         run: make build-examples
@@ -81,16 +70,19 @@ jobs:
       - name: Test server
         run: make test-server
 
-  haskell-lint:
-    timeout-minutes: 5
+  rust-lint:
+    timeout-minutes: 15
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
 
-      - name: "Run HLint"
-        uses: haskell-actions/hlint-scan@v1.3.0
+      - uses: dtolnay/rust-toolchain@stable
         with:
-          fail-on: warning
+          components: clippy
+
+      - uses: Swatinem/rust-cache@v2
+
+      - run: make lint-rs
 
   python-lint:
     runs-on: ubuntu-latest
@@ -122,30 +114,7 @@ jobs:
       - run: make generate-variants
       - run: git diff --exit-code
 
-  is-stack-deps-actual:
-    runs-on: ubuntu-latest
-    timeout-minutes: 45
-    steps:
-      - uses: actions/checkout@v6
-
-      - uses: actions/cache@v6
-        name: Cache ~/.stack
-        with:
-          path: ${{ '~/.stack' }}
-          key: is-stack-deps-actual-job-${{ runner.os }}-${{ runner.arch }}-stack-${{ hashFiles('.stack-deps.txt') }}
-
-      - name: Install haskell-stack
-        uses: haskell-actions/setup@v2
-        with:
-          enable-stack: true
-          stack-version: "latest"
-          stack-no-global: true
-          ghc-version: "9.10.3"
-
-      - run: make generate-stack-deps
-      - run: git diff --exit-code
-
-  haddock:
+  rustdoc:
     needs:
       - wrench
     if: github.ref == 'refs/heads/master'
@@ -161,32 +130,18 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - uses: actions/cache@v6
-        name: Cache ~/.stack
-        with:
-          path: ${{ '~/.stack' }}
-          key: haddock-job-${{ runner.os }}-${{ runner.arch }}-stack-${{ hashFiles('.stack-deps.txt') }}
+      - uses: dtolnay/rust-toolchain@stable
 
-      - name: Install haskell-stack
-        uses: haskell-actions/setup@v2
-        with:
-          enable-stack: true
-          stack-version: "latest"
-          stack-no-global: true
-          ghc-version: "9.10.3"
-
-      - name: Build Haddock docs
-        run: make docs-haddock
-
-      - name: Locate docs output
-        id: docs
-        run: echo "path=$(stack path --dist-dir)/doc/html/wrench" >> "$GITHUB_OUTPUT"
+      - name: Build docs
+        run: |
+          make docs-rustdoc
+          echo '<meta http-equiv="refresh" content="0; url=wrench/index.html">' > target/doc/index.html
 
       - uses: actions/configure-pages@v5
 
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: ${{ steps.docs.outputs.path }}
+          path: target/doc
 
       - name: Deploy to GitHub Pages
         id: deployment
@@ -195,7 +150,7 @@ jobs:
   build-binaries:
     needs:
       - wrench
-      - haskell-lint
+      - rust-lint
     if: github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/')
     strategy:
       matrix:
@@ -207,30 +162,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
-      - name: Cache dependencies on *nix
-        uses: actions/cache@v6
-        if: startsWith(runner.os, 'Linux') || startsWith(runner.os, 'macOS')
-        with:
-          path: ${{ '~/.stack' }}
-          key: build-binaries-job-${{ runner.os }}-${{ runner.arch }}-stack-${{ hashFiles('.stack-deps.txt') }}
+      - uses: dtolnay/rust-toolchain@stable
 
-      - name: Cache dependencies on Windows
-        if: startsWith(runner.os, 'Windows')
-        uses: actions/cache@v6
-        with:
-          path: |
-            ~\AppData\Roaming\stack
-            ~\AppData\Local\Programs\stack
-            C:\sr
-          key: build-binaries-job-${{ runner.os }}-${{ runner.arch }}-stack-${{ hashFiles('.stack-deps.txt') }}
-
-      - name: Install haskell-stack
-        uses: haskell-actions/setup@v2
-        with:
-          enable-stack: true
-          stack-version: "latest"
-          stack-no-global: true
-          ghc-version: "9.10.3"
+      - uses: Swatinem/rust-cache@v2
 
       - name: Resolve version metadata
         id: version
@@ -243,8 +177,13 @@ jobs:
         env:
           GIT_HASH: ${{ steps.version.outputs.git_hash }}
           GIT_DATE: ${{ steps.version.outputs.git_date }}
+        shell: bash
         run: |
-          stack build --copy-bins --local-bin-path ./dist
+          cargo build --release --workspace --locked
+          mkdir -p dist
+          for bin in wrench wrench-fmt wrench-serv; do
+            cp "target/release/$bin$([ "$RUNNER_OS" = Windows ] && echo .exe)" dist/
+          done
 
       - name: Prepare release archive
         run: |
@@ -259,12 +198,12 @@ jobs:
   publish-release:
     needs:
       - build-binaries
-      - haskell-formatting
+      - rust-formatting
       - html-formatting
       - markdown-formatting
       - python-lint
       - python-typecheck
-      - haskell-lint
+      - rust-lint
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
     steps:
@@ -304,7 +243,6 @@ jobs:
     needs:
       - wrench
       - is-variants-and-tests-actual
-      - is-stack-deps-actual
     if: github.ref == 'refs/heads/master'
     timeout-minutes: 30
     runs-on: ubuntu-24.04-arm

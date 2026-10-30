@@ -1,32 +1,24 @@
 ###########################################################
-# Stage 1: Build the Haskell builder image with deps
+# Stage 1: Build the Rust binaries
 
-FROM haskell:9.10.3-bookworm AS wrench-builder
-
-RUN apt-get update && apt-get install -y \
-    libgmp-dev \
-    && rm -rf /var/lib/apt/lists/*
+FROM rust:1-bookworm AS wrench-build
 
 WORKDIR /app
-COPY package.yaml stack.yaml stack.yaml.lock wrench.cabal /app/
-
-RUN stack setup --install-ghc
-RUN stack build --only-dependencies
-
-###########################################################
-# Stage 2.1: Build the Haskell application
-
-FROM ryukzak/wrench-builder AS wrench-build
-COPY . /app
+COPY Cargo.toml Cargo.lock build.rs /app/
+COPY src /app/src
+COPY wrench-serv /app/wrench-serv
 
 ARG VERSION_SUFFIX=""
 ARG GIT_HASH=""
 ARG GIT_DATE=""
 RUN echo "Building with VERSION_SUFFIX=${VERSION_SUFFIX} GIT_HASH=${GIT_HASH} GIT_DATE=${GIT_DATE}" && \
-    stack build --ghc-options -O2 --copy-bins --local-bin-path /app/.local/bin
+    VERSION_SUFFIX="${VERSION_SUFFIX}" GIT_HASH="${GIT_HASH}" GIT_DATE="${GIT_DATE}" \
+    cargo build --release --workspace --locked && \
+    mkdir -p /app/.local/bin && \
+    cp target/release/wrench target/release/wrench-fmt target/release/wrench-serv /app/.local/bin/
 
 ###########################################################
-# Stage 2.2: Generate variants
+# Stage 2.1: Generate variants
 
 FROM python:3.14-alpine3.24 AS wrench-variants
 
@@ -36,11 +28,11 @@ COPY script /app
 RUN [ "python", "/app/variants.py" ]
 
 ###########################################################
-# Stage 2.3: Pre-render example reports
+# Stage 2.2: Pre-render example reports
 
 FROM debian:bookworm-slim AS wrench-examples
 
-RUN apt-get update && apt-get install -y python3 libgmp10 libc6-dev ca-certificates locales \
+RUN apt-get update && apt-get install -y python3 ca-certificates locales \
     && echo "en_US.UTF-8 UTF-8" > /etc/locale.gen \
     && locale-gen \
     && apt-get clean \
@@ -64,7 +56,7 @@ RUN python3 /app/build_examples.py \
 
 FROM debian:bookworm-slim
 
-RUN apt-get update && apt-get install -y libgmp10 libc6-dev locales ca-certificates \
+RUN apt-get update && apt-get install -y locales ca-certificates \
     && echo "en_US.UTF-8 UTF-8" > /etc/locale.gen \
     && echo "ru_RU.UTF-8 UTF-8" >> /etc/locale.gen \
     && locale-gen \

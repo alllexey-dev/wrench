@@ -2,20 +2,22 @@
 
 ## Overview
 
-Wrench is an educational computer architecture simulation tool written in Haskell with Python scripts for test generation. This document outlines development workflows, code standards, and best practices for AI agents working on the project.
+Wrench is an educational computer architecture simulation tool written in Rust with Python scripts for test generation. This document outlines development workflows, code standards, and best practices for AI agents working on the project.
 
 ## Project Structure
 
 ```text
 wrench/
-├── src/                   # Haskell source code
+├── src/                   # Rust source code (wrench library, wrench and wrench-fmt binaries)
+├── wrench-serv/           # Rust web service
 ├── script/                # Python scripts and test generation
 │   ├── testcases/         # Test case definitions by category
 │   └── variants.py        # Main variant generation script
 ├── variants/              # Auto-generated test variants
 ├── docs/                  # Documentation (Markdown)
 ├── example/               # Example assembly programs
-├── test/                  # Haskell test suite
+├── tests/                 # Rust integration tests (golden, views, highlight)
+├── test/                  # Golden files and test fixtures
 ├── static/                # Web UI assets
 └── variants.md            # Auto-generated variant documentation
 ```
@@ -36,14 +38,14 @@ This ensures:
 2. `format-py` - Formats Python code using ruff
 3. `lint-fix-py` - Fixes linting issues automatically
 
-### Haskell Development Workflow
+### Rust Development Workflow
 
 - If you have a problem with golden tests, run `make test-accept` (but check their change relevance).
 
-After making changes to Haskell code:
+After making changes to Rust code:
 
 ```bash
-make format lint-fix test-hs
+make format lint-fix test-rs
 ```
 
 ### Markdown Documentation Workflow
@@ -63,7 +65,7 @@ make format-md
 For comprehensive changes affecting multiple file types:
 
 ```bash
-make fix  # Runs: lint-fix format generate-variants generate-stack-deps test-hs test-examples
+make fix  # Runs: lint-fix format generate test-accept test-examples test-server
 ```
 
 Note: `test-accept` is intentionally excluded — golden file acceptance must be

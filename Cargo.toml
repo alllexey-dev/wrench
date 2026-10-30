@@ -1,0 +1,20 @@
+[workspace]
+members = [".", "wrench-serv"]
+
+[package]
+name = "wrench"
+version = "0.0.5"
+edition = "2021"
+description = "A multi-architecture CPU simulator, assembler, and auto-grading toolkit for teaching computer architecture."
+license = "BSD-3-Clause"
+repository = "https://github.com/ryukzak/wrench"
+default-run = "wrench"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+imbl = "7"
+serde = { version = "1", features = ["derive"] }
+serde_yaml = "0.9"
+
+[profile.release]
+opt-level = 3

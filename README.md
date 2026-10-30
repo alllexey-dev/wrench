@@ -2,7 +2,7 @@
 
 ![Wrench CI](https://github.com/ryukzak/wrench/actions/workflows/ci.yml/badge.svg?branch=master)
 ![License](https://img.shields.io/github/license/ryukzak/wrench)
-[![Haddock](https://img.shields.io/badge/docs-haddock-purple)](https://ryukzak.github.io/wrench/)
+[![Rustdoc](https://img.shields.io/badge/docs-rustdoc-purple)](https://ryukzak.github.io/wrench/)
 
 Wrench is a teaching platform for computer architecture: one assembler/simulator toolchain shared across many deliberately different CPU paradigms, plus a formatter and a grading service for running real coursework. Every architecture uses the same assembly conventions, YAML-driven configuration, and report/assertion language, so a single lab exercise can be solved once and compared instruction-for-instruction across an accumulator machine, a stack machine, a load-store RISC, a register-memory CISC, a VLIW design, etc.
 
@@ -55,11 +55,11 @@ This tradeoff is scoped to teaching -- it isn't a claim that simplified ISAs are
 ### Build Locally
 
 1. Clone the repository.
-2. Install Haskell Stack via [GHCup](https://www.haskell.org/ghcup/).
-3. Run `stack build` to build the project.
+2. Install Rust via [rustup](https://rustup.rs/).
+3. Run `cargo build --release` to build the project.
 4. You have two options to run the project:
-    - Run `stack exec wrench -- <ARGS>` to execute the project without installation.
-    - Install the project with `stack install` to run it from the command line using `wrench <ARGS>`.
+    - Run `cargo run --release --bin wrench -- <ARGS>` to execute the project without installation.
+    - Install the project with `cargo install --path .` (and `cargo install --path wrench-serv` for the service) to run it from the command line using `wrench <ARGS>`.
 
 ### Install from a Binary Release
 
@@ -171,10 +171,10 @@ Task: Calculate the factorial of a number `n` (`n!`) in RISC-IV architecture.
 
 ```shell
 # Translation only
-stack exec wrench -- example/risc-iv-32/factorial.s -c example/risc-iv-32/factorial-5.yaml -S
+cargo run --release --bin wrench -- example/risc-iv-32/factorial.s -c example/risc-iv-32/factorial-5.yaml -S
 
 # Full simulation
-stack exec wrench -- example/risc-iv-32/factorial.s -c example/risc-iv-32/factorial-5.yaml
+cargo run --release --bin wrench -- example/risc-iv-32/factorial.s -c example/risc-iv-32/factorial-5.yaml
 ```
 
 ### More Examples
