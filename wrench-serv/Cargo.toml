@@ -1,6 +1,6 @@
 [package]
 name = "wrench-serv"
-version = "0.0.5"
+version = "0.6.2"
 edition = "2021"
 description = "Service for uploading and running Wrench test cases."
 license = "BSD-3-Clause"

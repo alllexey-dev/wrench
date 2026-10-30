@@ -3,7 +3,7 @@ members = [".", "wrench-serv"]
 
 [package]
 name = "wrench"
-version = "0.0.5"
+version = "0.6.2"
 edition = "2021"
 description = "A multi-architecture CPU simulator, assembler, and auto-grading toolkit for teaching computer architecture."
 license = "BSD-3-Clause"
