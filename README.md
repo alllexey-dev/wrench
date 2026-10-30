@@ -4,6 +4,50 @@
 ![License](https://img.shields.io/github/license/ryukzak/wrench)
 [![Rustdoc](https://img.shields.io/badge/docs-rustdoc-purple)](https://ryukzak.github.io/wrench/)
 
+## Rewrite It in Rust (rap)
+
+```text
+[Hook]
+Rewrite it in Rust, yeah, rewrite it in Rust,
+your C++ code is just rotting in dust,
+no null, no leaks, no segfault, no crash,
+blazingly fast and it's cleaner than cash.
+
+[Verse 1]
+I came to the project, the code was a mess,
+pointers everywhere, memory in distress,
+I said "step aside, I know what we must,"
+and I deleted it all and rewrote it in Rust. (hyperbole)
+
+Cargo build, I'm sipping my tea,
+compiler takes longer than my degree, (hyperbole)
+but when it compiles, man, it works like a dream,
+no garbage collector, I'm running it clean.
+
+[Hook]
+Rewrite it in Rust, yeah, rewrite it in Rust,
+your C++ code is just rotting in dust,
+no null, no leaks, no segfault, no crash,
+blazingly fast and it's cleaner than cash.
+
+[Verse 2]
+But then came the borrow checker, cold as ice, (tonal shift)
+said "you borrowed it twice, that's not very nice,"
+I added a lifetime, it said "that's wrong,"
+I added another, it's been three days long.
+
+Arc, Mutex, Box, Rc, clone,
+I'm fighting the compiler all alone,
+I begged it, I cried, I screamed "let me through!"
+it said "error[E0502]," what did I do?
+
+[Outro]
+Only after three days did it compile for me, (inversion)
+the app does nothing, but it's memory-safe, see? (irony)
+They asked me "was it worth it, the pain and the dust?"
+I said "nah, but next time... I'll rewrite it in Rust." (circular structure)
+```
+
 Wrench is a teaching platform for computer architecture: one assembler/simulator toolchain shared across many deliberately different CPU paradigms, plus a formatter and a grading service for running real coursework. Every architecture uses the same assembly conventions, YAML-driven configuration, and report/assertion language, so a single lab exercise can be solved once and compared instruction-for-instruction across an accumulator machine, a stack machine, a load-store RISC, a register-memory CISC, a VLIW design, etc.
 
 - `wrench` -- translator/simulator itself
@@ -183,47 +227,3 @@ For more examples and test cases, see:
 
 - [Example directory](./example/) - Contains documented example programs
 - [Test golden directory](./test/golden) - Contains test cases with expected outputs
-
-## Rewrite It in Rust (rap)
-
-```text
-[Hook]
-Rewrite it in Rust, yeah, rewrite it in Rust,
-your C++ code is just rotting in dust,
-no null, no leaks, no segfault, no crash,
-blazingly fast and it's cleaner than cash.
-
-[Verse 1]
-I came to the project, the code was a mess,
-pointers everywhere, memory in distress,
-I said "step aside, I know what we must,"
-and I deleted it all and rewrote it in Rust. (hyperbole)
-
-Cargo build, I'm sipping my tea,
-compiler takes longer than my degree, (hyperbole)
-but when it compiles, man, it works like a dream,
-no garbage collector, I'm running it clean.
-
-[Hook]
-Rewrite it in Rust, yeah, rewrite it in Rust,
-your C++ code is just rotting in dust,
-no null, no leaks, no segfault, no crash,
-blazingly fast and it's cleaner than cash.
-
-[Verse 2]
-But then came the borrow checker, cold as ice, (tonal shift)
-said "you borrowed it twice, that's not very nice,"
-I added a lifetime, it said "that's wrong,"
-I added another, it's been three days long.
-
-Arc, Mutex, Box, Rc, clone,
-I'm fighting the compiler all alone,
-I begged it, I cried, I screamed "let me through!"
-it said "error[E0502]," what did I do?
-
-[Outro]
-Only after three days did it compile for me, (inversion)
-the app does nothing, but it's memory-safe, see? (irony)
-They asked me "was it worth it, the pain and the dust?"
-I said "nah, but next time... I'll rewrite it in Rust." (circular structure)
-```
