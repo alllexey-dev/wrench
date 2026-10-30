@@ -183,3 +183,47 @@ For more examples and test cases, see:
 
 - [Example directory](./example/) - Contains documented example programs
 - [Test golden directory](./test/golden) - Contains test cases with expected outputs
+
+## Rewrite It in Rust (rap)
+
+```text
+[Hook]
+Rewrite it in Rust, yeah, rewrite it in Rust,
+your C++ code is just rotting in dust,
+no null, no leaks, no segfault, no crash,
+blazingly fast and it's cleaner than cash.
+
+[Verse 1]
+I came to the project, the code was a mess,
+pointers everywhere, memory in distress,
+I said "step aside, I know what we must,"
+and I deleted it all and rewrote it in Rust. (hyperbole)
+
+Cargo build, I'm sipping my tea,
+compiler takes longer than my degree, (hyperbole)
+but when it compiles, man, it works like a dream,
+no garbage collector, I'm running it clean.
+
+[Hook]
+Rewrite it in Rust, yeah, rewrite it in Rust,
+your C++ code is just rotting in dust,
+no null, no leaks, no segfault, no crash,
+blazingly fast and it's cleaner than cash.
+
+[Verse 2]
+But then came the borrow checker, cold as ice, (tonal shift)
+said "you borrowed it twice, that's not very nice,"
+I added a lifetime, it said "that's wrong,"
+I added another, it's been three days long.
+
+Arc, Mutex, Box, Rc, clone,
+I'm fighting the compiler all alone,
+I begged it, I cried, I screamed "let me through!"
+it said "error[E0502]," what did I do?
+
+[Outro]
+Only after three days did it compile for me, (inversion)
+the app does nothing, but it's memory-safe, see? (irony)
+They asked me "was it worth it, the pain and the dust?"
+I said "nah, but next time... I'll rewrite it in Rust." (circular structure)
+```
